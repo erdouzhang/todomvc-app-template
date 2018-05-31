@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>路由配置</title>
+	<style>
+		html, body {
+			margin: 0;
+			padding: 0;
+			width: 100%;
+			height: 100%;
+			overflow: hidden; /*滚动条*/
+		}
+
+		body ul {
+			width: 960px;
+			margin: 20px auto;
+			padding: 0;
+			list-style: none;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+		}
+
+		ul > li {
+			align-items: center;
+		}
+
+		ul > li > a {
+			text-decoration: none;
+			color: #9e8385;
+		}
+
+		ul::after {
+			display: table;
+			line-height: 0;
+			overflow: hidden;
+			margin: 0;
+			padding: 0;
+		}
+
+		h1 {
+			display: block;
+			font-size: 2em;
+			-webkit-margin-before: 0;
+			-webkit-margin-after: 0;
+			-webkit-margin-start: 0px;
+			-webkit-margin-end: 0px;
+			font-weight: bold;
+		}
+
+		.box {
+			width: 960px;
+			margin: 0 auto;
+			text-align: center;
+			color: #6cab88e0;
+		}
+	</style>
+</head>
+<body ng-app="mainapp">
+<ul>
+	<li><a href="#!/a">1.单页面应用程序A</a></li>
+	<li><a href="#!/b">2.单页面应用程序B</a></li>
+	<li><a href="#!/c">3.单页面应用程序C</a></li>
+</ul>
+<div ng-view class="box"></div>
+
+<!--引入包文件-->
+<script src="node_modules/angular/angular.js"></script>
+<script src="node_modules/angular-route/angular-route.js"></script>
+<script>
+	(function (angular) {
+		var myNgApp = angular.module('mainapp', ['ngRoute']);
+
+		// 编写对应的控制器 (每个控制器对应一个视图)
+		myNgApp.controller('AController', ['$scope','$route','$routeParams','$location',function ($scope, $route, $routeParams, $location) {
+			$scope.title = "这是单页面A";
+			console.log($routeParams);
+		}]);
+
+		myNgApp.controller('BController', ['$scope','$route','$routeParams','$location',function ($scope, $route, $routeParams, $location) {
+			$scope.title = "这是单页面B";
+		}]);
+		myNgApp.controller('CController', ['$scope','$route','$routeParams','$location', function ($scope, $route, $routeParams, $location) {
+			  $scope.title = "这是单页面C";
+		}]);
+
+		//注册配置路由模块
+		myNgApp.config(['$routeProvider', function ($routeProvider) {
+			$routeProvider.when('/a/:name?', {
+				controller: 'AController',  //A控制器
+				templateUrl: './view/singleA.html'//模板地址
+
+			}).when('/b', {
+				controller: 'BController', //B控制器
+				templateUrl: './view/singleB.html'//模板地址
+			}).when('/c', {
+				controller: 'CController',  //C控制器
+				templateUrl: './view/singleC.html'//模板地址
+			}).otherwise({
+
+				redirectTo:'/a'     // 默认跳转链接
+			});
+		}]);
+	})(angular);
+</script>
+</body>
+</html>
